@@ -289,6 +289,11 @@ Examples with Field Level Security:
 "Disable debug logs for a specific user"
 "Configure log level to DEBUG for a user"
 ```
+### salesforce_create_user
+Create Salesforce User:
+* Create Salesforce Users
+
+
 
 ## Development
 

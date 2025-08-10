@@ -9,6 +9,7 @@ import {
 import * as dotenv from "dotenv";
 
 import { createSalesforceConnection } from "./utils/connection.js";
+import { CREATE_USER, CreateUserArgs, handleCreateUser } from './tools/createUser.js';
 import { SEARCH_OBJECTS, handleSearchObjects } from "./tools/search.js";
 import { DESCRIBE_OBJECT, handleDescribeObject } from "./tools/describe.js";
 import { QUERY_RECORDS, handleQueryRecords, QueryArgs } from "./tools/query.js";
@@ -42,6 +43,7 @@ const server = new Server(
 // Tool handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
+    CREATE_USER,
     SEARCH_OBJECTS, 
     DESCRIBE_OBJECT, 
     QUERY_RECORDS, 
@@ -68,6 +70,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const conn = await createSalesforceConnection();
 
     switch (name) {
+      case "salesforce_create_user": {
+        const userArgs = args as Record<string, unknown>;
+        if (!userArgs.username || !userArgs.email || !userArgs.firstName || !userArgs.lastName || !userArgs.profileId) {
+          throw new Error('username, email, firstName, lastName, and profileId are required for creating a user');
+        }
+        const createUserArgs: CreateUserArgs = {
+          username: userArgs.username as string,
+          email: userArgs.email as string,
+          firstName: userArgs.firstName as string,
+          lastName: userArgs.lastName as string,
+          profileId: userArgs.profileId as string,
+          alias: (userArgs.alias as string) || (userArgs.username as string).split('@')[0]
+        };
+        return await handleCreateUser(conn, createUserArgs);
+      }
+
       case "salesforce_search_objects": {
         const { searchPattern } = args as { searchPattern: string };
         if (!searchPattern) throw new Error('searchPattern is required');
