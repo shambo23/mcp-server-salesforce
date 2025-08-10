@@ -312,11 +312,3 @@ npm install
 npm run build
 ```
 
-## Contributing
-Contributions are welcome! Feel free to submit a Pull Request.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Issues and Support
-If you encounter any issues or need support, please file an issue on the [GitHub repository](https://github.com/tsmztech/mcp-server-salesforce/issues).
